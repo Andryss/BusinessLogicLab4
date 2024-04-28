@@ -25,6 +25,7 @@ public class TransactionConfiguration {
         JtaTransactionManager transactionManager = new JtaTransactionManager();
         transactionManager.setUserTransaction(new UserTransactionImp());
         transactionManager.setTransactionManager(new UserTransactionManager());
+        transactionManager.setAllowCustomIsolationLevels(true);
         return transactionManager;
     }
 }
