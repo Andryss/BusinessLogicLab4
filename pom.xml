@@ -5,33 +5,42 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>ru.andryss.rutube</groupId>
+    <groupId>ru.andryss</groupId>
     <artifactId>rutube</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>BusinessLogicLab4</name>
+    <name>rutube</name>
 
     <properties>
         <java.version>17</java.version>
     </properties>
 
     <dependencies>
+
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+            <version>7.21.0</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>
+        <finalName>rutube-parody</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
