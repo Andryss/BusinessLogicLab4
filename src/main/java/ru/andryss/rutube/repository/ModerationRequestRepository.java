@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ModerationRequestRepository extends JpaRepository<ModerationRequest, String> {
-    Optional<ModerationRequest> findByAssignee(String username);
+    Optional<ModerationRequest> findBySourceIdAndAssignee(String id, String assignee);
 
     @Modifying
     @Query(value = """
         update moderation_requests
         set assignee = :username, assigned_at = :assignedAt
-        where source_id = (select source_id from moderation_requests where assignee is null limit 1)
+        where source_id = :sourceId
     """, nativeQuery = true)
-    void assignModeration(String username, Instant assignedAt);
+    void assignModeration(String sourceId, String username, Instant assignedAt);
 
     @Query(value = """
         select new ru.andryss.rutube.message.AssignmentInfo(m.username, m.email, r.sourceId)

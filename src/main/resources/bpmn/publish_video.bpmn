@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ai5dxh" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="Process_publish_video" name="publish_video" isExecutable="true" camunda:historyTimeToLive="P180D">
+    <bpmn:endEvent id="Event_08slxkp" name="Видео опубликовано">
+      <bpmn:incoming>Flow_0bnu3c0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1or9g0w" sourceRef="Event_1is2q2h" targetRef="Activity_1akhti9" />
+    <bpmn:userTask id="Activity_1akhti9" name="Отметка о публикации видео">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="#{assignToAuthorTaskListener}" event="create" />
+        <camunda:formData>
+          <camunda:formField id="downloadLink" label="Video file" type="string" defaultValue="#{downloadLink}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1or9g0w</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xnopjq</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="Event_1is2q2h" name="Получение разрешения на публикацию">
+      <bpmn:outgoing>Flow_1or9g0w</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0xnopjq" sourceRef="Activity_1akhti9" targetRef="Activity_0lqjz9o" />
+    <bpmn:sequenceFlow id="Flow_0bnu3c0" sourceRef="Activity_0lqjz9o" targetRef="Event_08slxkp" />
+    <bpmn:serviceTask id="Activity_0lqjz9o" name="Публикация видео" camunda:delegateExpression="#{videoPublisher}">
+      <bpmn:incoming>Flow_0xnopjq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bnu3c0</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_publish_video">
+      <bpmndi:BPMNShape id="Activity_1v7evo2_di" bpmnElement="Activity_1akhti9">
+        <dc:Bounds x="310" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ipdwc0_di" bpmnElement="Event_1is2q2h">
+        <dc:Bounds x="172" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="151" y="145" width="78" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_08slxkp_di" bpmnElement="Event_08slxkp">
+        <dc:Bounds x="722" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="704" y="145" width="72" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04ukktw_di" bpmnElement="Activity_0lqjz9o">
+        <dc:Bounds x="520" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1or9g0w_di" bpmnElement="Flow_1or9g0w">
+        <di:waypoint x="208" y="120" />
+        <di:waypoint x="310" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xnopjq_di" bpmnElement="Flow_0xnopjq">
+        <di:waypoint x="410" y="120" />
+        <di:waypoint x="520" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bnu3c0_di" bpmnElement="Flow_0bnu3c0">
+        <di:waypoint x="620" y="120" />
+        <di:waypoint x="722" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

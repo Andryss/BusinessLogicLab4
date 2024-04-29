@@ -3,15 +3,14 @@ package ru.andryss.rutube.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import ru.andryss.rutube.exception.IncorrectVideoStatusException;
+import ru.andryss.rutube.exception.SourceNotFoundException;
 import ru.andryss.rutube.exception.VideoAlreadyPublishedException;
 import ru.andryss.rutube.exception.VideoNotFoundException;
 import ru.andryss.rutube.message.VideoThumbInfo;
 import ru.andryss.rutube.model.User;
 import ru.andryss.rutube.model.Video;
-import ru.andryss.rutube.model.VideoStatus;
 import ru.andryss.rutube.repository.UserRepository;
 import ru.andryss.rutube.repository.VideoRepository;
 
@@ -59,8 +58,8 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public void putVideo(String sourceId, String author, VideoChangeInfo info) {
-        transactionTemplate.executeWithoutResult(status -> {
+    public boolean putVideo(String sourceId, String author, VideoChangeInfo info) {
+        return Boolean.TRUE.equals(transactionTemplate.execute(status -> {
             Video video = videoRepository.findBySourceIdAndAuthor(sourceId, author).orElseThrow(() -> new VideoNotFoundException(sourceId));
 
             if (video.getStatus() == PUBLISHED) {
@@ -75,27 +74,21 @@ public class VideoServiceImpl implements VideoService {
             video.setComments(info.comments());
             video.setUpdatedAt(Instant.now());
 
+            boolean isReady = false;
             if (video.getStatus() == FILL_PENDING) {
                 video.setStatus(READY);
+                isReady = true;
             }
 
             videoRepository.save(video);
-        });
+            return isReady;
+        }));
     }
 
     @Override
-    public VideoStatus getVideoStatus(String sourceId, String author) {
-        return readOnlyTransactionTemplate.execute(status -> {
-            Video video = videoRepository.findBySourceIdAndAuthor(sourceId, author).orElseThrow(() -> new VideoNotFoundException(sourceId));
-
-            return video.getStatus();
-        });
-    }
-
-    @Override
-    public void publishVideo(String sourceId, String author) {
+    public void publishVideo(String sourceId) {
         transactionTemplate.executeWithoutResult(status -> {
-            Video video = videoRepository.findBySourceIdAndAuthor(sourceId, author).orElseThrow(() -> new VideoNotFoundException(sourceId));
+            Video video = videoRepository.findById(sourceId).orElseThrow(() -> new VideoNotFoundException(sourceId));
 
             if (video.getStatus() != READY) {
                 throw new IncorrectVideoStatusException(video.getStatus(), READY);
@@ -155,5 +148,12 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public List<String> findVideosPendingModeration(Instant timestamp) {
         return readOnlyTransactionTemplate.execute(status -> videoRepository.findAllPendingModeration(timestamp));
+    }
+
+    @Override
+    public String getAuthor(String sourceId) {
+        return readOnlyTransactionTemplate.execute(status ->
+                videoRepository.findById(sourceId).orElseThrow(() -> new SourceNotFoundException(sourceId)).getAuthor()
+        );
     }
 }

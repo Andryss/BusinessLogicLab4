@@ -26,25 +26,16 @@ public interface VideoService {
      * @param sourceId video to put info
      * @param author putting user
      * @param videoChangeInfo video info to put
+     * @return true if video ready to publish
      */
-    void putVideo(String sourceId, String author, VideoChangeInfo videoChangeInfo);
-
-    /**
-     * Returns status of given video
-     *
-     * @param sourceId video to search
-     * @param author getting user
-     * @return status
-     */
-    VideoStatus getVideoStatus(String sourceId, String author);
+    boolean putVideo(String sourceId, String author, VideoChangeInfo videoChangeInfo);
 
     /**
      * Publishes given video
      *
      * @param sourceId video to publish
-     * @param author publishing user
      */
-    void publishVideo(String sourceId, String author);
+    void publishVideo(String sourceId);
 
     /**
      * Finds published videos
@@ -85,6 +76,14 @@ public interface VideoService {
      * @return found source ids
      */
     List<String> findVideosPendingModeration(Instant timestamp);
+
+    /**
+     * Returns author of given source
+     *
+     * @param sourceId video to search
+     * @return author
+     */
+    String getAuthor(String sourceId);
 
     record VideoChangeInfo(String title, String description, VideoCategory category, VideoAccess access,
                            Boolean ageRestriction, Boolean comments) { }

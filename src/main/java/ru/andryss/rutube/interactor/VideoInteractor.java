@@ -14,4 +14,8 @@ public interface VideoInteractor {
      * Handles put video data event
      */
     void handlePutVideoData(String sourceId, PutVideoRequest request, String user);
+    /**
+     * Handles video publish event
+     */
+    void handlePublishVideo(String sourceId);
 }

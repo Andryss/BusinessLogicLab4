@@ -20,6 +20,11 @@
     <bpmn:userTask id="Activity_1qm9x3y" name="Заполнение данных о видео" camunda:assignee="${ initiator }">
       <bpmn:extensionElements>
         <camunda:formData>
+          <camunda:formField id="downloadLink" label="Video file" type="string" defaultValue="#{downloadLink}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
           <camunda:formField id="title" label="Title" type="string">
             <camunda:validation>
               <camunda:constraint name="required" />

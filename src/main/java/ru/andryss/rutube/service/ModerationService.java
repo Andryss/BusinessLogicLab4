@@ -9,14 +9,31 @@ import java.time.Instant;
  */
 public interface ModerationService {
     /**
+     * Handle new moderation request
+     *
+     * @param sourceId source to moderate
+     * @param downloadLink link to view source
+     * @param createdAt request creation time
+     */
+    void handleRequest(String sourceId, String downloadLink, Instant createdAt);
+
+    /**
      * Handle new moderation result
      *
      * @param sourceId moderated source
      * @param status moderation result
      * @param comment comment
      * @param createdAt creation timestamp
+     * @return true if video is ready to publish now
      */
-    void handleResult(String sourceId, ModerationStatus status, String comment, Instant createdAt);
+    boolean handleResult(String sourceId, ModerationStatus status, String comment, Instant createdAt);
+
+    /**
+     * Sends message to request moderation resending
+     *
+     * @param sourceId source to request
+     */
+    void requestResend(String sourceId);
 
     /**
      * Handle moderation resend
@@ -26,10 +43,20 @@ public interface ModerationService {
     void handleResend(String sourceId);
 
     /**
-     * Find comment of moderation result
+     * Saves moderation result
      *
-     * @param sourceId source to search
-     * @return moderation comment
+     * @param sourceId moderated source
+     * @param username moderator
+     * @param status moderation result
+     * @param comment result comment (e.g. reject reason)
      */
-    String getModerationComment(String sourceId);
+    void uploadModeration(String sourceId, String username, ModerationStatus status, String comment);
+
+    /**
+     * Assigns moderation request to user
+     *
+     * @param sourceId source to assign
+     * @param assignee user
+     */
+    void assignRequest(String sourceId, String assignee);
 }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0kvph6e" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="Process_moderate_video" name="moderate_video" isExecutable="true" camunda:historyTimeToLive="P180D">
+    <bpmn:userTask id="Activity_172ix9k" name="Проверка соответствия видео требованиям платформы" camunda:candidateGroups="moderator">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="#{assigneeSetOnCompleteTaskListener}" event="complete" />
+        <camunda:formData>
+          <camunda:formField id="downloadLink" label="Video file" type="string" defaultValue="#{downloadLink}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="approved" label="Approved?" type="boolean" />
+          <camunda:formField id="comment" label="Comment" type="string" defaultValue="OK">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+        <camunda:taskListener delegateExpression="#{assigneeUpdateTaskListener}" event="update" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0z2ex39</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i5q65a</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1yggt9g" name="Видео соответствует критериям?">
+      <bpmn:incoming>Flow_1i5q65a</bpmn:incoming>
+      <bpmn:outgoing>Flow_00actnf</bpmn:outgoing>
+      <bpmn:outgoing>Flow_00n1bwy</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateThrowEvent id="Event_17pacn6" name="Публикация разрешена">
+      <bpmn:incoming>Flow_00actnf</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_09l0dh2" camunda:delegateExpression="#{publicationApprover}" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Event_17k3a1o" name="Публикация отклонена">
+      <bpmn:incoming>Flow_00n1bwy</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_15ojf2a" camunda:delegateExpression="#{publicationRejector}" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_0z2ex39" sourceRef="Event_1hbkfiq" targetRef="Activity_172ix9k" />
+    <bpmn:sequenceFlow id="Flow_1i5q65a" sourceRef="Activity_172ix9k" targetRef="Gateway_1yggt9g" />
+    <bpmn:sequenceFlow id="Flow_00actnf" name="да" sourceRef="Gateway_1yggt9g" targetRef="Event_17pacn6">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{approved}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_00n1bwy" name="нет" sourceRef="Gateway_1yggt9g" targetRef="Event_17k3a1o">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{!approved}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:startEvent id="Event_1hbkfiq" name="Получение заявки на модерацию">
+      <bpmn:outgoing>Flow_0z2ex39</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_moderate_video">
+      <bpmndi:BPMNShape id="Event_135fn5r_di" bpmnElement="Event_17pacn6">
+        <dc:Bounds x="712" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="699" y="295" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15bhxtg_di" bpmnElement="Activity_172ix9k">
+        <dc:Bounds x="310" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1yggt9g_di" bpmnElement="Gateway_1yggt9g" isMarkerVisible="true">
+        <dc:Bounds x="515" y="155" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="574.5" y="160" width="73" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1l9yowx_di" bpmnElement="Event_17k3a1o">
+        <dc:Bounds x="712" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="699" y="126" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0sozajx_di" bpmnElement="Event_1hbkfiq">
+        <dc:Bounds x="172" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="205" width="60" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0z2ex39_di" bpmnElement="Flow_0z2ex39">
+        <di:waypoint x="208" y="180" />
+        <di:waypoint x="310" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00actnf_di" bpmnElement="Flow_00actnf">
+        <di:waypoint x="540" y="205" />
+        <di:waypoint x="540" y="270" />
+        <di:waypoint x="712" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="549" y="235" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i5q65a_di" bpmnElement="Flow_1i5q65a">
+        <di:waypoint x="410" y="180" />
+        <di:waypoint x="515" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00n1bwy_di" bpmnElement="Flow_00n1bwy">
+        <di:waypoint x="540" y="155" />
+        <di:waypoint x="540" y="100" />
+        <di:waypoint x="712" y="100" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="547" y="126" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

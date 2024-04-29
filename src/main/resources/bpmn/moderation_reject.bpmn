@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0tyeb5b" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="Process_moderation_reject" name="moderation_reject" isExecutable="true" camunda:historyTimeToLive="P180D">
+    <bpmn:userTask id="Activity_1wf8hae" name="Изучение проблемы">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="#{assignToAuthorTaskListener}" event="create" />
+        <camunda:formData>
+          <camunda:formField id="downloadLink" label="Video file" type="string" defaultValue="#{downloadLink}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="comment" label="Comment" type="string" defaultValue="#{comment}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1dp7zki</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kf0qfq</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1dp7zki" sourceRef="Event_0oe6uwu" targetRef="Activity_1wf8hae" />
+    <bpmn:endEvent id="Event_031jgd1">
+      <bpmn:incoming>Flow_1kf0qfq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1kf0qfq" sourceRef="Activity_1wf8hae" targetRef="Event_031jgd1" />
+    <bpmn:startEvent id="Event_0oe6uwu" name="Получение отклоненной заявки">
+      <bpmn:outgoing>Flow_1dp7zki</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_moderation_reject">
+      <bpmndi:BPMNShape id="Activity_0wjq22w_di" bpmnElement="Activity_1wf8hae">
+        <dc:Bounds x="300" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_031jgd1_di" bpmnElement="Event_031jgd1">
+        <dc:Bounds x="492" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0nzomid_di" bpmnElement="Event_0oe6uwu">
+        <dc:Bounds x="172" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="157" y="145" width="66" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1dp7zki_di" bpmnElement="Flow_1dp7zki">
+        <di:waypoint x="208" y="120" />
+        <di:waypoint x="300" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kf0qfq_di" bpmnElement="Flow_1kf0qfq">
+        <di:waypoint x="400" y="120" />
+        <di:waypoint x="492" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
