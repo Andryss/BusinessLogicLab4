@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_10fy63b" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="Process_upload_video" name="upload_video" isExecutable="true" camunda:historyTimeToLive="P180D">
+    <bpmn:startEvent id="StartEvent_1scjufo" name="Инициирование загрузки видео" camunda:initiator="initiator">
+      <bpmn:outgoing>Flow_0c56s2i</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:intermediateThrowEvent id="Event_1h71a94" name="Заявка на модерацию">
+      <bpmn:incoming>Flow_0d01whr</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0f5zhla" camunda:delegateExpression="#{moderationRequestSender}" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_0c56s2i" sourceRef="StartEvent_1scjufo" targetRef="Activity_04tzw0k" />
+    <bpmn:sequenceFlow id="Flow_0d01whr" sourceRef="Activity_04tzw0k" targetRef="Event_1h71a94" />
+    <bpmn:sequenceFlow id="Flow_19bhic3" sourceRef="Activity_04tzw0k" targetRef="Activity_1qm9x3y" />
+    <bpmn:userTask id="Activity_04tzw0k" name="Загрузка видео" camunda:formKey="embedded:app:forms/upload_video_form.html" camunda:assignee="${ initiator }">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_0c56s2i</bpmn:incoming>
+      <bpmn:outgoing>Flow_0d01whr</bpmn:outgoing>
+      <bpmn:outgoing>Flow_19bhic3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1qm9x3y" name="Заполнение данных о видео" camunda:assignee="${ initiator }">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="title" label="Title" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+              <camunda:constraint name="minlength" config="1" />
+              <camunda:constraint name="maxlength" config="100" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="description" label="Description" type="string">
+            <camunda:validation>
+              <camunda:constraint name="maxlength" config="5000" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="category" label="Category" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+            <camunda:value id="ANIME" name="Anime" />
+            <camunda:value id="FOOD" name="Food" />
+            <camunda:value id="MUSIC" name="Music" />
+            <camunda:value id="SCIENCE" name="Science" />
+            <camunda:value id="HUMOUR" name="Humour" />
+          </camunda:formField>
+          <camunda:formField id="access" label="Acess" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+            <camunda:value id="PUBLIC" name="Public" />
+            <camunda:value id="LINK" name="By link" />
+            <camunda:value id="PRIVATE" name="Private" />
+          </camunda:formField>
+          <camunda:formField id="ageRestriction" label="Age restriction" type="boolean" defaultValue="false">
+            <camunda:validation />
+          </camunda:formField>
+          <camunda:formField id="comments" label="Comments" type="boolean" defaultValue="true">
+            <camunda:validation />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_19bhic3</bpmn:incoming>
+      <bpmn:outgoing>Flow_14r6um3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_04ijnnx" name="Ожидание модерации">
+      <bpmn:incoming>Flow_0y8nyk4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_14r6um3" sourceRef="Activity_1qm9x3y" targetRef="Activity_15gp943" />
+    <bpmn:sequenceFlow id="Flow_0y8nyk4" sourceRef="Activity_15gp943" targetRef="Event_04ijnnx" />
+    <bpmn:serviceTask id="Activity_15gp943" name="Внесение данных о видео" camunda:delegateExpression="#{videoDataSaver}">
+      <bpmn:incoming>Flow_14r6um3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0y8nyk4</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmn:message id="Message_20g8csu" name="Message_20g8csu" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_upload_video">
+      <bpmndi:BPMNShape id="BPMNShape_1cr14wo" bpmnElement="StartEvent_1scjufo">
+        <dc:Bounds x="142" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="119" y="305" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1h71a94_di" bpmnElement="Event_1h71a94">
+        <dc:Bounds x="312" y="112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="300" y="82" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1iwgp1b_di" bpmnElement="Activity_04tzw0k">
+        <dc:Bounds x="280" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0cyjumc_di" bpmnElement="Activity_1qm9x3y">
+        <dc:Bounds x="480" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_03u8ngl_di" bpmnElement="Event_04ijnnx">
+        <dc:Bounds x="872" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="862" y="305" width="57" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_028j94p_di" bpmnElement="Activity_15gp943">
+        <dc:Bounds x="680" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0c56s2i_di" bpmnElement="Flow_0c56s2i">
+        <di:waypoint x="178" y="280" />
+        <di:waypoint x="280" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d01whr_di" bpmnElement="Flow_0d01whr">
+        <di:waypoint x="330" y="240" />
+        <di:waypoint x="330" y="148" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19bhic3_di" bpmnElement="Flow_19bhic3">
+        <di:waypoint x="380" y="280" />
+        <di:waypoint x="480" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14r6um3_di" bpmnElement="Flow_14r6um3">
+        <di:waypoint x="580" y="280" />
+        <di:waypoint x="680" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y8nyk4_di" bpmnElement="Flow_0y8nyk4">
+        <di:waypoint x="780" y="280" />
+        <di:waypoint x="872" y="280" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
