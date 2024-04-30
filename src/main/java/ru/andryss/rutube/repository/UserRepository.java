@@ -9,11 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
-    Optional<User> findByUsernameIgnoreCase(String username);
-
     @Query(value = """
-        select u.username, u.email, u.password, u.role
-        from videos as v join users as u on v.author = u.username
+        select u.id_, u.rev_, u.first_, u.last_, u.email_, u.pwd_, u.salt_, u.lock_exp_time_, u.attempts_, u.picture_id_
+        from videos as v join act_id_user as u on v.author = u.id_
         where v.status in ('UPLOAD_PENDING', 'FILL_PENDING') and v.updated_at < :timestamp
     """, nativeQuery = true)
     List<User> findWithVideosPendingActions(Instant timestamp);

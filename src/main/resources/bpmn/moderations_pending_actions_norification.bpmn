@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1gztt0c" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="Process_moderations_pending_actions_norification" name="moderations_pending_actions_norification" isExecutable="true" camunda:historyTimeToLive="P180D">
+    <bpmn:startEvent id="Event_0xfnjvj" name="Каждые 30 минут">
+      <bpmn:outgoing>Flow_1i0szjh</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1a0tafl">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 10/30 * * * ?</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0kwyznu" name="Отправка напоминаний модераторам с долго не проходящими модерациями">
+      <bpmn:incoming>Flow_1i0szjh</bpmn:incoming>
+      <bpmn:property id="Property_1mck3jw" name="__targetRef_placeholder" />
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0p0gi54" camunda:delegateExpression="#{moderationsPendingActionsNotificator}" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1i0szjh" sourceRef="Event_0xfnjvj" targetRef="Event_0kwyznu" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_moderations_pending_actions_norification">
+      <bpmndi:BPMNShape id="Event_0gxvg5o_di" bpmnElement="Event_0xfnjvj">
+        <dc:Bounds x="182" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="125" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1m2331n_di" bpmnElement="Event_0kwyznu">
+        <dc:Bounds x="392" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="372" y="125" width="78" height="80" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1i0szjh_di" bpmnElement="Flow_1i0szjh">
+        <di:waypoint x="218" y="100" />
+        <di:waypoint x="392" y="100" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

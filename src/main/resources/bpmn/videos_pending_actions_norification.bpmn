@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1eihq1y" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="Process_videos_pending_actions_norification" name="videos_pending_actions_norification" isExecutable="true" camunda:historyTimeToLive="P180D">
+    <bpmn:startEvent id="StartEvent_1n27lni" name="Каждый день 9:00">
+      <bpmn:outgoing>Flow_18kcd5b</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1ttxm5o">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 0 9 * * ?</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0md7bs2" name="Отправка напоминаний пользователям с недозаполненными видео">
+      <bpmn:incoming>Flow_18kcd5b</bpmn:incoming>
+      <bpmn:property id="Property_1tmgf1o" name="__targetRef_placeholder" />
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1awqj0i" camunda:delegateExpression="#{videosPendingActionsNotificator}" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_18kcd5b" sourceRef="StartEvent_1n27lni" targetRef="Event_0md7bs2" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_videos_pending_actions_norification">
+      <bpmndi:BPMNShape id="Event_1qi634t_di" bpmnElement="StartEvent_1n27lni">
+        <dc:Bounds x="172" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="156" y="145" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qit8bu_di" bpmnElement="Event_0md7bs2">
+        <dc:Bounds x="362" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="337" y="145" width="87" height="66" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_18kcd5b_di" bpmnElement="Flow_18kcd5b">
+        <di:waypoint x="208" y="120" />
+        <di:waypoint x="362" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

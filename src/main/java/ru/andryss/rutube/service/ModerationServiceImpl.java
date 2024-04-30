@@ -10,6 +10,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import ru.andryss.rutube.exception.IncorrectVideoStatusException;
 import ru.andryss.rutube.exception.SourceNotFoundException;
 import ru.andryss.rutube.exception.VideoNotFoundException;
+import ru.andryss.rutube.message.AssignmentInfo;
 import ru.andryss.rutube.message.ModerationResendInfo;
 import ru.andryss.rutube.message.ModerationResultInfo;
 import ru.andryss.rutube.model.*;
@@ -20,6 +21,7 @@ import ru.andryss.rutube.repository.VideoRepository;
 
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import static ru.andryss.rutube.model.ModerationStatus.SUCCESS;
@@ -37,6 +39,7 @@ public class ModerationServiceImpl implements ModerationService {
     private final ModerationRequestSenderService requestSenderService;
     private final KafkaProducer<String, Object> kafkaProducer;
     private final TransactionTemplate transactionTemplate;
+    private final TransactionTemplate readOnlyTransactionTemplate;
 
     @Value("${topic.moderation.results}")
     private String moderationResultsTopic;
@@ -159,5 +162,10 @@ public class ModerationServiceImpl implements ModerationService {
         transactionTemplate.executeWithoutResult(s ->
                 requestRepository.assignModeration(sourceId, assignee, Instant.now())
         );
+    }
+
+    @Override
+    public List<AssignmentInfo> findRequestsAssignedBefore(Instant timestamp) {
+        return readOnlyTransactionTemplate.execute(status -> requestRepository.findAssignedBefore(timestamp));
     }
 }

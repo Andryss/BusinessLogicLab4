@@ -22,8 +22,8 @@ public interface ModerationRequestRepository extends JpaRepository<ModerationReq
     void assignModeration(String sourceId, String username, Instant assignedAt);
 
     @Query(value = """
-        select new ru.andryss.rutube.message.AssignmentInfo(m.username, m.email, r.sourceId)
-        from ModerationRequest r join Moderator m on r.assignee = m.username
+        select new ru.andryss.rutube.message.AssignmentInfo(u.username, u.email, r.sourceId)
+        from ModerationRequest r join User u on r.assignee = u.username
         where r.assignee is not null and r.createdAt < :timestamp
     """)
     List<AssignmentInfo> findAssignedBefore(Instant timestamp);
