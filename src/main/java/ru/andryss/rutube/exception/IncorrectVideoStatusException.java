@@ -5,12 +5,7 @@ import ru.andryss.rutube.model.VideoStatus;
 
 @Getter
 public class IncorrectVideoStatusException extends RuntimeException {
-
-    private final VideoStatus real;
-    private final VideoStatus expected;
-
     public IncorrectVideoStatusException(VideoStatus real, VideoStatus expected) {
-        this.real = real;
-        this.expected = expected;
+        super(String.format("video is in %s state, but %s expected", real, expected));
     }
 }
