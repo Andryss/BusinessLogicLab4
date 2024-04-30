@@ -1,5 +1,6 @@
 package ru.andryss.rutube.interactor;
 
+import org.camunda.bpm.engine.variable.value.FileValue;
 import ru.andryss.rutube.message.PutVideoRequest;
 
 /**
@@ -9,7 +10,7 @@ public interface VideoInteractor {
     /**
      * Handles video upload event
      */
-    String handleVideoUpload(String user, byte[] file);
+    String handleVideoUpload(String user, FileValue file);
     /**
      * Handles put video data event
      */

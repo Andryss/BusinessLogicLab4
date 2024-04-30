@@ -13,5 +13,7 @@ import lombok.Setter;
 public class Source {
     @Id
     String sourceId;
+    String filename;
+    String mime;
     byte[] content;
 }

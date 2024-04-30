@@ -17,52 +17,8 @@
       <bpmn:outgoing>Flow_0d01whr</bpmn:outgoing>
       <bpmn:outgoing>Flow_19bhic3</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_1qm9x3y" name="Заполнение данных о видео" camunda:assignee="${ initiator }">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="downloadLink" label="Video file" type="string" defaultValue="#{downloadLink}">
-            <camunda:validation>
-              <camunda:constraint name="readonly" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="title" label="Title" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-              <camunda:constraint name="minlength" config="1" />
-              <camunda:constraint name="maxlength" config="100" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="description" label="Description" type="string">
-            <camunda:validation>
-              <camunda:constraint name="maxlength" config="5000" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="category" label="Category" type="enum">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-            <camunda:value id="ANIME" name="Anime" />
-            <camunda:value id="FOOD" name="Food" />
-            <camunda:value id="MUSIC" name="Music" />
-            <camunda:value id="SCIENCE" name="Science" />
-            <camunda:value id="HUMOUR" name="Humour" />
-          </camunda:formField>
-          <camunda:formField id="access" label="Acess" type="enum">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-            <camunda:value id="PUBLIC" name="Public" />
-            <camunda:value id="LINK" name="By link" />
-            <camunda:value id="PRIVATE" name="Private" />
-          </camunda:formField>
-          <camunda:formField id="ageRestriction" label="Age restriction" type="boolean" defaultValue="false">
-            <camunda:validation />
-          </camunda:formField>
-          <camunda:formField id="comments" label="Comments" type="boolean" defaultValue="true">
-            <camunda:validation />
-          </camunda:formField>
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1qm9x3y" name="Заполнение данных о видео" camunda:formKey="embedded:app:forms/fill_video_form.html" camunda:assignee="${ initiator }">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_19bhic3</bpmn:incoming>
       <bpmn:outgoing>Flow_14r6um3</bpmn:outgoing>
     </bpmn:userTask>

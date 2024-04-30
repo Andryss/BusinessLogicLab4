@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
+import ru.andryss.rutube.exception.IllegalVideoFormatException;
 import ru.andryss.rutube.exception.IncorrectVideoStatusException;
 import ru.andryss.rutube.exception.SourceNotFoundException;
 import ru.andryss.rutube.exception.VideoNotFoundException;
@@ -29,7 +30,11 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     @Retryable(retryFor = SQLException.class)
-    public void putVideo(String sourceId, byte[] content) {
+    public void putVideo(String sourceId, String filename, String mime, byte[] content) {
+        if (!mime.equals("video/mp4") || content.length > 2 * 1024 * 1024) {
+            throw new IllegalVideoFormatException();
+        }
+
         transactionTemplate.executeWithoutResult(status -> {
             Video video = videoRepository.findById(sourceId).orElseThrow(() -> new VideoNotFoundException(sourceId));
             if (video.getStatus() != UPLOAD_PENDING) {
@@ -40,6 +45,8 @@ public class SourceServiceImpl implements SourceService {
 
             Source source = new Source();
             source.setSourceId(sourceId);
+            source.setFilename(filename);
+            source.setMime(mime);
             source.setContent(content);
 
             sourceRepository.save(source);
@@ -55,11 +62,9 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public byte[] getVideo(String sourceId) {
-        return readOnlyTransactionTemplate.execute(status -> {
-            Source source = sourceRepository.findById(sourceId).orElseThrow(() -> new SourceNotFoundException(sourceId));
-
-            return source.getContent();
-        });
+    public Source getVideo(String sourceId) {
+        return readOnlyTransactionTemplate.execute(status ->
+            sourceRepository.findById(sourceId).orElseThrow(() -> new SourceNotFoundException(sourceId))
+        );
     }
 }

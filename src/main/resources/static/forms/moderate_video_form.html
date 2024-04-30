@@ -1,0 +1,32 @@
+<form role="form" class="form-horizontal">
+
+    <div class="control-group">
+        <label class="control-label">Video file</label>
+        <div class="controls">
+            <a cam-file-download="file"></a>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Approved?</label>
+        <div class="controls">
+            <input type="checkbox" class="form-control"
+                   cam-variable-name="approved"
+                   cam-variable-type="Boolean"
+            />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Comment</label>
+        <div class="controls">
+            <input type="text" class="form-control"
+                   cam-variable-name="comment"
+                   cam-variable-type="String"
+                   value="OK"
+                   required
+            />
+        </div>
+    </div>
+
+</form>

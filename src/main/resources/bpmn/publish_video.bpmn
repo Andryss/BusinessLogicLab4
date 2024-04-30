@@ -5,16 +5,9 @@
       <bpmn:incoming>Flow_0bnu3c0</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1or9g0w" sourceRef="Event_1is2q2h" targetRef="Activity_1akhti9" />
-    <bpmn:userTask id="Activity_1akhti9" name="Отметка о публикации видео">
+    <bpmn:userTask id="Activity_1akhti9" name="Отметка о публикации видео" camunda:formKey="embedded:app:forms/publish_video_form.html">
       <bpmn:extensionElements>
         <camunda:taskListener delegateExpression="#{assignToAuthorTaskListener}" event="create" />
-        <camunda:formData>
-          <camunda:formField id="downloadLink" label="Video file" type="string" defaultValue="#{downloadLink}">
-            <camunda:validation>
-              <camunda:constraint name="readonly" />
-            </camunda:validation>
-          </camunda:formField>
-        </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1or9g0w</bpmn:incoming>
       <bpmn:outgoing>Flow_0xnopjq</bpmn:outgoing>

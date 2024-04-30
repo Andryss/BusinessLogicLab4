@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0kvph6e" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
   <bpmn:process id="Process_moderate_video" name="moderate_video" isExecutable="true" camunda:historyTimeToLive="P180D">
-    <bpmn:userTask id="Activity_172ix9k" name="Проверка соответствия видео требованиям платформы" camunda:candidateGroups="moderator">
+    <bpmn:userTask id="Activity_172ix9k" name="Проверка соответствия видео требованиям платформы" camunda:formKey="embedded:app:forms/moderate_video_form.html" camunda:candidateGroups="moderator">
       <bpmn:extensionElements>
         <camunda:taskListener delegateExpression="#{assigneeSetOnCompleteTaskListener}" event="complete" />
-        <camunda:formData>
-          <camunda:formField id="downloadLink" label="Video file" type="string" defaultValue="#{downloadLink}">
-            <camunda:validation>
-              <camunda:constraint name="readonly" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="approved" label="Approved?" type="boolean" />
-          <camunda:formField id="comment" label="Comment" type="string" defaultValue="OK">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-        </camunda:formData>
         <camunda:taskListener delegateExpression="#{assigneeUpdateTaskListener}" event="update" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0z2ex39</bpmn:incoming>

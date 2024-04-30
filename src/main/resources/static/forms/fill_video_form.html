@@ -1,0 +1,85 @@
+<form role="form" class="form-horizontal">
+
+    <div class="control-group">
+        <label class="control-label">Video file</label>
+        <div class="controls">
+            <a cam-file-download="file"></a>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Title</label>
+        <div class="controls">
+            <input type="text" class="form-control"
+                   cam-variable-name="title"
+                   cam-variable-type="String"
+                   minlength="1"
+                   maxlength="100"
+                   required
+            />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Description</label>
+        <div class="controls">
+            <textarea class="form-control"
+                      cam-variable-name="description"
+                      cam-variable-type="String"
+                      maxlength="5000"
+            ></textarea>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Category</label>
+        <div class="controls">
+            <select class="form-control"
+                    cam-variable-name="category"
+                    cam-variable-type="String"
+                    required>
+                <option>ANIME</option>
+                <option>FOOD</option>
+                <option>MUSIC</option>
+                <option>SCIENCE</option>
+                <option>HUMOUR</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Access</label>
+        <div class="controls">
+            <select class="form-control"
+                    cam-variable-name="access"
+                    cam-variable-type="String"
+                    required>
+                <option>PUBLIC</option>
+                <option>LINK</option>
+                <option>PRIVATE</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Age restriction</label>
+        <div class="controls">
+            <input type="checkbox" class="form-control"
+                   cam-variable-name="ageRestriction"
+                   cam-variable-type="Boolean"
+            />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Comments</label>
+        <div class="controls">
+            <input type="checkbox" class="form-control"
+                   cam-variable-name="comments"
+                   cam-variable-type="Boolean"
+                   checked
+            />
+        </div>
+    </div>
+
+</form>

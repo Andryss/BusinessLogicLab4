@@ -1,5 +1,7 @@
 package ru.andryss.rutube.service;
 
+import ru.andryss.rutube.model.Source;
+
 /**
  * Service for working with camunda bpm process
  */
@@ -8,21 +10,21 @@ public interface ProcessService {
      * Starts source moderation process
      *
      * @param sourceId source to moderate
-     * @param downloadLink link to download source
+     * @param file source raw file
      */
-    void startModerationProcess(String sourceId, String downloadLink);
+    void startModerationProcess(String sourceId, Source file);
     /**
      * Starts moderation reject process
      *
      * @param sourceId source to moderate
-     * @param downloadLink link to download source
+     * @param file source raw file
      */
-    void startModerationRejectProcess(String sourceId, String downloadLink, String comment);
+    void startModerationRejectProcess(String sourceId, Source file, String comment);
     /**
      * Starts video publication process
      *
      * @param sourceId source to publish
-     * @param downloadLink link to download source
+     * @param file source raw file
      */
-    void startVideoPublicationProcess(String sourceId, String downloadLink);
+    void startVideoPublicationProcess(String sourceId, Source file);
 }

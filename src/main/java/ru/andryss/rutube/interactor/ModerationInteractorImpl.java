@@ -8,6 +8,7 @@ import ru.andryss.rutube.message.ModerationResendInfo;
 import ru.andryss.rutube.message.ModerationResultInfo;
 import ru.andryss.rutube.message.UploadModerationResultRequest;
 import ru.andryss.rutube.model.ModerationStatus;
+import ru.andryss.rutube.model.Source;
 import ru.andryss.rutube.service.ModerationService;
 import ru.andryss.rutube.service.ProcessService;
 import ru.andryss.rutube.service.SourceService;
@@ -24,9 +25,11 @@ public class ModerationInteractorImpl implements ModerationInteractor {
     @Override
     public void moderationRequestMessage(ModerationRequestInfo request) {
         log.info("got ModerationRequest message {}", request);
-        moderationService.handleRequest(request.getSourceId(), request.getDownloadLink(), request.getCreatedAt());
+        String sourceId = request.getSourceId();
 
-        processService.startModerationProcess(request.getSourceId(), request.getDownloadLink());
+        moderationService.handleRequest(sourceId, request.getDownloadLink(), request.getCreatedAt());
+
+        processService.startModerationProcess(sourceId, sourceService.getVideo(sourceId));
     }
 
     @Override
@@ -38,14 +41,14 @@ public class ModerationInteractorImpl implements ModerationInteractor {
 
         boolean isReady = moderationService.handleResult(sourceId, result.getStatus(), comment, result.getCreatedAt());
 
-        String downloadLink = sourceService.generateDownloadLink(sourceId);
+        Source video = sourceService.getVideo(sourceId);
 
         if (result.getStatus() == ModerationStatus.FAILURE) {
-            processService.startModerationRejectProcess(sourceId, downloadLink, comment);
+            processService.startModerationRejectProcess(sourceId, video, comment);
         }
 
         if (isReady) {
-            processService.startVideoPublicationProcess(sourceId, downloadLink);
+            processService.startVideoPublicationProcess(sourceId, video);
         }
     }
 
