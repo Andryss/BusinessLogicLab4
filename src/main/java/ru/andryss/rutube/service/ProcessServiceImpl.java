@@ -2,13 +2,14 @@ package ru.andryss.rutube.service;
 
 import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.variable.Variables;
-import org.camunda.bpm.engine.variable.value.FileValue;
 import org.springframework.stereotype.Service;
 import ru.andryss.rutube.model.Source;
+import ru.andryss.rutube.model.Video;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static ru.andryss.rutube.service.ProcessService.buildFile;
 
 @Service
 @RequiredArgsConstructor
@@ -36,19 +37,29 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public void startVideoPublicationProcess(String sourceId, Source file) {
+    public void startVideoPublicationProcess(Video video, Source file) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("sourceId", sourceId);
+        variables.put("sourceId", video.getSourceId());
         variables.put("file", buildFile(file));
+        variables.put("title", video.getTitle());
+        variables.put("description", video.getDescription());
+        variables.put("category", video.getCategory().toString());
+        variables.put("ageRestriction", video.isAgeRestriction());
+        variables.put("comments", video.isComments());
 
         runtimeService.startProcessInstanceByKey("Process_publish_video", variables);
     }
 
-    private FileValue buildFile(Source file) {
-        return Variables
-                .fileValue(file.getFilename())
-                .file(file.getContent())
-                .mimeType(file.getMime())
-                .create();
+    @Override
+    public void startWatchVideoProcess(Video video, Source file) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("file", buildFile(file));
+        variables.put("title", video.getTitle());
+        variables.put("description", video.getDescription());
+        variables.put("category", video.getCategory().toString());
+        variables.put("ageRestriction", video.isAgeRestriction());
+        variables.put("comments", video.isComments());
+
+        runtimeService.startProcessInstanceByKey("Process_watch_video", variables);
     }
 }

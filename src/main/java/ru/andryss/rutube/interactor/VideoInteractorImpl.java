@@ -1,16 +1,20 @@
 package ru.andryss.rutube.interactor;
 
 import lombok.RequiredArgsConstructor;
-import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.variable.value.FileValue;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import ru.andryss.rutube.exception.NoPublishedVideosException;
 import ru.andryss.rutube.message.PutVideoRequest;
+import ru.andryss.rutube.message.VideoThumbInfo;
+import ru.andryss.rutube.model.Video;
 import ru.andryss.rutube.service.ProcessService;
 import ru.andryss.rutube.service.SourceService;
 import ru.andryss.rutube.service.VideoService;
 import ru.andryss.rutube.service.VideoService.VideoChangeInfo;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -37,12 +41,23 @@ public class VideoInteractorImpl implements VideoInteractor {
         VideoChangeInfo videoChangeInfo = new VideoChangeInfo(request.getTitle().trim(), request.getDescription().trim(),
                 request.getCategory(), request.getAccess(), request.isAgeRestriction(), request.isComments());
         if (videoService.putVideo(sourceId, user, videoChangeInfo)) {
-            processService.startVideoPublicationProcess(sourceId, sourceService.getVideo(sourceId));
+            processService.startVideoPublicationProcess(videoService.findVideoById(sourceId), sourceService.getVideo(sourceId));
         }
     }
 
     @Override
     public void handlePublishVideo(String sourceId) {
-        videoService.publishVideo(sourceId);
+        Video video = videoService.publishVideo(sourceId);
+
+        processService.startWatchVideoProcess(video, sourceService.getVideo(sourceId));
+    }
+
+    @Override
+    public List<VideoThumbInfo> handleFetchPublishedVideos() {
+        List<VideoThumbInfo> videoThumbs = videoService.getPublishedVideos(PageRequest.of(0, 200)); // чё?
+        if (videoThumbs.size() == 0) {
+            throw new NoPublishedVideosException();
+        }
+        return videoThumbs;
     }
 }

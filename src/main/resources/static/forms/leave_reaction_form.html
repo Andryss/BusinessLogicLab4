@@ -1,0 +1,33 @@
+<form role="form" class="form-horizontal">
+
+    <div class="control-group">
+        <label class="control-label">Video file</label>
+        <div class="controls">
+            <a cam-file-download="file"></a>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Reaction</label>
+        <div class="controls">
+            <select class="form-control"
+                    cam-variable-name="reaction"
+                    cam-variable-type="String">
+                <option>NONE</option>
+                <option>LIKE</option>
+                <option>DISLIKE</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">Comment</label>
+        <div class="controls">
+            <input type="text" id="comment-input" class="form-control"
+                   cam-variable-name="comment"
+                   cam-variable-type="String"
+            />
+        </div>
+    </div>
+
+</form>

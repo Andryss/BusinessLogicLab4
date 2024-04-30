@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_14yta77" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="Process_leave_reaction" name="leave_reaction" isExecutable="true" camunda:candidateStarterGroups="user" camunda:historyTimeToLive="P180D">
+    <bpmn:startEvent id="StartEvent_1scjufo" name="Инициирование оставления реакции" camunda:initiator="initiator">
+      <bpmn:outgoing>Flow_1e9gv1q</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1e9gv1q" sourceRef="StartEvent_1scjufo" targetRef="Activity_1ddy3co" />
+    <bpmn:sequenceFlow id="Flow_1itfl82" sourceRef="Activity_1ddy3co" targetRef="Activity_0p5mtcm" />
+    <bpmn:endEvent id="Event_1wq7l0s" name="Реакция оставлена">
+      <bpmn:incoming>Flow_0xvlb05</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0xvlb05" sourceRef="Activity_04xqfpz" targetRef="Event_1wq7l0s" />
+    <bpmn:serviceTask id="Activity_1ddy3co" name="Выборка опубликованных видео" camunda:delegateExpression="#{publishedVideoFetcher}">
+      <bpmn:incoming>Flow_1e9gv1q</bpmn:incoming>
+      <bpmn:outgoing>Flow_1itfl82</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_0p5mtcm" name="Выбор видео" camunda:formKey="embedded:app:forms/choose_video_form.html" camunda:assignee="#{ initiator }">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="#{attachVideoBySourceIdTaskListener}" event="complete" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1itfl82</bpmn:incoming>
+      <bpmn:outgoing>Flow_1k6bd7f</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_04xqfpz" name="Сохранение реакции" camunda:delegateExpression="#{reactionSaver}">
+      <bpmn:incoming>Flow_1dq9jcg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xvlb05</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1k6bd7f" sourceRef="Activity_0p5mtcm" targetRef="Activity_0jmxxuw" />
+    <bpmn:userTask id="Activity_0jmxxuw" name="Выбор реакции" camunda:formKey="embedded:app:forms/leave_reaction_form.html" camunda:assignee="#{ initiator }">
+      <bpmn:incoming>Flow_1k6bd7f</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dq9jcg</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1dq9jcg" sourceRef="Activity_0jmxxuw" targetRef="Activity_04xqfpz" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_leave_reaction">
+      <bpmndi:BPMNShape id="BPMNShape_1cr14wo" bpmnElement="StartEvent_1scjufo">
+        <dc:Bounds x="182" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="159" y="145" width="82" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09lnqyy_di" bpmnElement="Activity_1ddy3co">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08qgdhl_di" bpmnElement="Activity_0p5mtcm">
+        <dc:Bounds x="480" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08hclqc_di" bpmnElement="Activity_04xqfpz">
+        <dc:Bounds x="879" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1wq7l0s_di" bpmnElement="Event_1wq7l0s">
+        <dc:Bounds x="1082" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1074" y="145" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hxbjj4_di" bpmnElement="Activity_0jmxxuw">
+        <dc:Bounds x="680" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1e9gv1q_di" bpmnElement="Flow_1e9gv1q">
+        <di:waypoint x="218" y="120" />
+        <di:waypoint x="290" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xvlb05_di" bpmnElement="Flow_0xvlb05">
+        <di:waypoint x="979" y="120" />
+        <di:waypoint x="1082" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1itfl82_di" bpmnElement="Flow_1itfl82">
+        <di:waypoint x="390" y="120" />
+        <di:waypoint x="480" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1k6bd7f_di" bpmnElement="Flow_1k6bd7f">
+        <di:waypoint x="580" y="120" />
+        <di:waypoint x="680" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dq9jcg_di" bpmnElement="Flow_1dq9jcg">
+        <di:waypoint x="780" y="120" />
+        <di:waypoint x="879" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

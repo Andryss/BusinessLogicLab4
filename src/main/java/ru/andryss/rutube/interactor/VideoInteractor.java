@@ -2,6 +2,9 @@ package ru.andryss.rutube.interactor;
 
 import org.camunda.bpm.engine.variable.value.FileValue;
 import ru.andryss.rutube.message.PutVideoRequest;
+import ru.andryss.rutube.message.VideoThumbInfo;
+
+import java.util.List;
 
 /**
  * Interactor for handling video requests
@@ -19,4 +22,8 @@ public interface VideoInteractor {
      * Handles video publish event
      */
     void handlePublishVideo(String sourceId);
+    /**
+     * Handles fetch published videos event
+     */
+    List<VideoThumbInfo> handleFetchPublishedVideos();
 }

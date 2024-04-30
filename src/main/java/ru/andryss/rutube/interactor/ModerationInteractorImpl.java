@@ -12,6 +12,7 @@ import ru.andryss.rutube.model.Source;
 import ru.andryss.rutube.service.ModerationService;
 import ru.andryss.rutube.service.ProcessService;
 import ru.andryss.rutube.service.SourceService;
+import ru.andryss.rutube.service.VideoService;
 
 @Slf4j
 @Component
@@ -21,6 +22,7 @@ public class ModerationInteractorImpl implements ModerationInteractor {
     private final ModerationService moderationService;
     private final SourceService sourceService;
     private final ProcessService processService;
+    private final VideoService videoService;
 
     @Override
     public void moderationRequestMessage(ModerationRequestInfo request) {
@@ -48,7 +50,7 @@ public class ModerationInteractorImpl implements ModerationInteractor {
         }
 
         if (isReady) {
-            processService.startVideoPublicationProcess(sourceId, video);
+            processService.startVideoPublicationProcess(videoService.findVideoById(sourceId), video);
         }
     }
 

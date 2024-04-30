@@ -86,8 +86,8 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public void publishVideo(String sourceId) {
-        transactionTemplate.executeWithoutResult(status -> {
+    public Video publishVideo(String sourceId) {
+        return transactionTemplate.execute(status -> {
             Video video = videoRepository.findById(sourceId).orElseThrow(() -> new VideoNotFoundException(sourceId));
 
             if (video.getStatus() != READY) {
@@ -97,7 +97,7 @@ public class VideoServiceImpl implements VideoService {
             video.setStatus(PUBLISHED);
             video.setPublishedAt(Instant.now());
 
-            videoRepository.save(video);
+            return videoRepository.save(video);
         });
     }
 
@@ -154,6 +154,13 @@ public class VideoServiceImpl implements VideoService {
     public String getAuthor(String sourceId) {
         return readOnlyTransactionTemplate.execute(status ->
                 videoRepository.findById(sourceId).orElseThrow(() -> new SourceNotFoundException(sourceId)).getAuthor()
+        );
+    }
+
+    @Override
+    public Video findVideoById(String sourceId) {
+        return readOnlyTransactionTemplate.execute(status ->
+                videoRepository.findById(sourceId).orElseThrow(() -> new SourceNotFoundException(sourceId))
         );
     }
 }

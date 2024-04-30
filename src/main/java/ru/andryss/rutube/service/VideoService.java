@@ -34,8 +34,9 @@ public interface VideoService {
      * Publishes given video
      *
      * @param sourceId video to publish
+     * @return published video
      */
-    void publishVideo(String sourceId);
+    Video publishVideo(String sourceId);
 
     /**
      * Finds published videos
@@ -84,6 +85,14 @@ public interface VideoService {
      * @return author
      */
     String getAuthor(String sourceId);
+
+    /**
+     * Finds video by source id
+     *
+     * @param sourceId id to find
+     * @return found video
+     */
+    Video findVideoById(String sourceId);
 
     record VideoChangeInfo(String title, String description, VideoCategory category, VideoAccess access,
                            Boolean ageRestriction, Boolean comments) { }
