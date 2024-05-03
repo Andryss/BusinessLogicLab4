@@ -31,10 +31,6 @@ public class SourceServiceImpl implements SourceService {
     @Override
     @Retryable(retryFor = SQLException.class)
     public void putVideo(String sourceId, String filename, String mime, byte[] content) {
-        if (!mime.equals("video/mp4") || content.length > 2 * 1024 * 1024) {
-            throw new IllegalVideoFormatException();
-        }
-
         transactionTemplate.executeWithoutResult(status -> {
             Video video = videoRepository.findById(sourceId).orElseThrow(() -> new VideoNotFoundException(sourceId));
             if (video.getStatus() != UPLOAD_PENDING) {

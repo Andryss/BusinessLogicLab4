@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.variable.value.FileValue;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import ru.andryss.rutube.exception.IllegalVideoFormatException;
 import ru.andryss.rutube.exception.NoPublishedVideosException;
 import ru.andryss.rutube.message.PutVideoRequest;
 import ru.andryss.rutube.message.VideoThumbInfo;
@@ -28,10 +29,16 @@ public class VideoInteractorImpl implements VideoInteractor {
     @Override
     public String handleVideoUpload(String user, FileValue file) {
         String sourceId = UUID.randomUUID().toString();
+        String mime = file.getMimeType();
+        byte[] content = ((ByteArrayInputStream) file.getValue()).readAllBytes();
+
+        if (!mime.equals("video/mp4") || content.length == 0 || content.length > 2 * 1024 * 1024) {
+            throw new IllegalVideoFormatException();
+        }
 
         videoService.createNewVideo(sourceId, user, null);
 
-        sourceService.putVideo(sourceId, file.getFilename(), file.getMimeType(), ((ByteArrayInputStream) file.getValue()).readAllBytes());
+        sourceService.putVideo(sourceId, file.getFilename(), mime, content);
 
         return sourceId;
     }

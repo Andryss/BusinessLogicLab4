@@ -6,6 +6,9 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_18ilscc" sourceRef="StartEvent_1" targetRef="Activity_13jsryo" />
     <bpmn:userTask id="Activity_13jsryo" name="Просмотр видео" camunda:formKey="embedded:app:forms/watch_video_form.html">
+      <bpmn:extensionElements>
+        <camunda:taskListener delegateExpression="#{neverCompleteTaskListener}" event="complete" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_18ilscc</bpmn:incoming>
     </bpmn:userTask>
   </bpmn:process>

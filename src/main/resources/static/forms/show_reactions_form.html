@@ -1,6 +1,15 @@
 <form role="form" class="form-horizontal">
 
     <div class="control-group">
+        <label class="control-label">Video</label>
+        <div class="controls">
+            <video controls id="video-player">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <div class="control-group">
         <label class="control-label">Video file</label>
         <div class="controls">
             <a cam-file-download="file"></a>
@@ -39,5 +48,16 @@
             ></textarea>
         </div>
     </div>
+
+    <script cam-script type="text/form-script">
+        var variableManager = camForm.variableManager;
+        var player = document.getElementById('video-player');
+
+        camForm.on('variables-fetched', function() {
+            console.log(variableManager.variables);
+
+            player.src = variableManager.variables.file.contentUrl
+        });
+    </script>
 
 </form>

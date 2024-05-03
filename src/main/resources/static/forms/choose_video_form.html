@@ -1,25 +1,38 @@
 <form role="form" class="form-horizontal">
 
     <div class="control-group">
-        <label class="control-label">Video</label>
+        <label class="control-label">Choice</label>
         <div class="controls">
-            <textarea class="form-control"
-                      cam-variable-name="availableVideos"
-                      cam-variable-type="String"
-                      rows="10"
-                      readonly
-            ></textarea>
+            <select type="text" class="form-control" id="choiceSelector"
+                   cam-variable-name="sourceId"
+                   cam-variable-type="String">
+            </select>
         </div>
     </div>
 
-    <div class="control-group">
-        <label class="control-label">Choice</label>
-        <div class="controls">
-            <input type="text" class="form-control"
-                   cam-variable-name="sourceId"
-                   cam-variable-type="String"
-            />
-        </div>
-    </div>
+    <script cam-script type="text/form-script">
+        var variableManager = camForm.variableManager;
+        var choiceField = document.getElementById('choiceSelector');
+
+        camForm.on('form-loaded', function() {
+            variableManager.fetchVariable('availableVideos');
+        });
+
+        camForm.on('variables-fetched', function() {
+            console.log(variableManager.variables);
+
+            var availableVideos = variableManager.variableValue('availableVideos');
+            var choices = JSON.parse(availableVideos);
+
+            for (var source in choices) {
+                if (choices.hasOwnProperty(source)) {
+                    var option = document.createElement('option');
+                    option.value = source;
+                    option.text = choices[source];
+                    choiceField.appendChild(option);
+                }
+            }
+        });
+    </script>
 
 </form>
